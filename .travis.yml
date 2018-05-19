@@ -3,18 +3,16 @@ sudo: required
 services:
   - docker
 
-install:
-  - docker rmi $(docker images -q) || true
+env:
+  global:
+    - secure: "Gk7RvPmMGHBDjRJgBM7Bi+Al1hSwBg3UcSoqdsnObxLF86h0LXxK8xXt71cvXF3iWtQL1bPxqBOYF4IJBUA/t9BbmkNd6/xRdCtCQQrKbKVTyXAkjTmIQzrOErUXznGgxxXM6SThKDh/Ym/kW6vbiz3FNOjWtpy26BIDI4jS/ROb3P0aV8ZoX8jNJYA7COv07N+/Bl3C9TPpPacYcv9o2cn/jK+l+KGjVNEk/32ojKdLau4bJK9upb7gIPpHa5VvR5Se0ZjOQ2jgkBp9U8DOpuLqFjyOwSgzop6LgJogy1yuYIdz8Gq0Re5wEDXTQBbmyTBHY4hVQq9CJjmH2rcXcAQo4eDJ1797bn95H2CcGFrt0WUaoFZ8fLmZlgZfpvklUqr4vcs/p9zuzzJYUQDWsoitnfMhchFHFTmBLdDqFHIRdnRH2iY0ZjBHUdY3ZjflnlceOvI1v+Cn50XGyjEUbJi0tBhy6uB8VHq/aPvWZT4L8dfeJ91oNJaIfZ7E2YmHrTx13Jltp/c2GZLorVX/bJwFjaKrmHctz7tS5gnt9MxF7SBkhYQNmMzWDXy52NGLR+zrG1VSrrJtXM9YytbkzMRPoWlT/xqH/bYk0pNAV8WSEeP/CQXFiN3uihos4BwuvZDrk0FOFz/ul2aMPXEKsgWPz6n9UFINxELE/BvcOWM=" # DOCKER_USER
+    - secure: "lonZ6ydRvxYPRuCls+kSmZTYG4NKDCUYtQjAync+N5AmPyBQfxMwht8XrxYRAVvPAXP6b19LSEBI0gkJ4dobotd5VzNIjAy9T2LtSSOXVwXPRtXCwNhYIMjo/YLMAIXzlD+8qAoeVUcpLslX+4MMokumziMeo5F5caDB+AJnu+GlkAlLBKRaEuhkAn6SHtKRhDCnpOWO25S6CVtCEebhqWCl6RK5c8NNH8uG4vp9LNpjnTklUD/OdSjhWunNgUlCYfQzc2moUwbxwznoyHR8O+4x8hcVGmUEMLEjGSXtVMWP5i9OtRzrwlmbaSGD8rgSvsPyy4+MSjgZ0zOY2Vz3Hk21dJu9dOYKH1WrjMqXgFElXITF6zthxyyIJeYC0jd9y7M+BLHa6fgkUogmrsMC6zb0HNYUqT0jvJwoXYKH/x03pK5nO9AVHByDd1/VivKxhnseegc16QE5eY8+RHjNgW3H9PTsfI9syft7NuWzTvsydDQDoMwxBIopVFwTpNcbRdwu+xcZdP1uCDc4pjbe+JpvwDQgcTs1xUGDxZceWwN2Supz94dCvK8HRjObOyVph0zPu4lV233QuHgDfrHCM5CFUeIxelb9LImE1VzkLhhKnG0LMe1GeUphWYlvcgSRo5bwKmEa9OwEbyy+dXqCTDQ3n7GhZur9j/xyB7HdTec=" # DOCKER_PASS
 
 script:
-  - docker build -t golonzovsky/go-hello .
-
-deploy:
-  provider: script
-  script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker push golonzovsky/go-hello
+  - docker build -t $DOCKER_USER/go-hello:latest -t $DOCKER_USER/go-hello:$TRAVIS_COMMIT .
+  - echo hey, deploying..
+  - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+  - docker images
+  - docker push $DOCKER_USER/go-hello
   on:
     branch: master
-
-
