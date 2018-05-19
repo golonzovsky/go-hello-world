@@ -1,0 +1,20 @@
+sudo: required
+
+services:
+  - docker
+
+install:
+  - docker rmi $(docker images -q) || true
+
+script:
+  - docker build -t golonzovsky/go-hello .
+
+deploy:
+  provider: script
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker push golonzovsky/go-hello
+  on:
+    branch: master
+
+
