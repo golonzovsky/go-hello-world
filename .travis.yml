@@ -10,9 +10,13 @@ env:
 
 script:
   - docker build -t $DOCKER_USER/go-hello:latest -t $DOCKER_USER/go-hello:$TRAVIS_COMMIT .
-  - echo hey, deploying..
-  - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-  - docker images
-  - docker push $DOCKER_USER/go-hello
+
+deploy:
+  provider: script
+  script:
+    - echo hey, deploying..
+    - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+    - docker images
+    - docker push $DOCKER_USER/go-hello
   on:
     branch: master
