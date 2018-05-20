@@ -10,6 +10,7 @@ script:
 deploy:
   provider: script
   script:
+  - ls -lah
   - echo hey, pushing image for user $DOCKER_USER
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
   - docker images
