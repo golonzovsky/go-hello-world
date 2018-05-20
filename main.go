@@ -5,7 +5,13 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"encoding/json"
 )
+
+type Hey struct {
+	Name    string
+	Message string
+}
 
 func main() {
 	http.HandleFunc("/", handleHello)
@@ -14,7 +20,13 @@ func main() {
 }
 
 func handleHello(w http.ResponseWriter, req *http.Request) {
-	id := strings.TrimPrefix(req.URL.Path, "/")
+	hey := Hey{strings.TrimPrefix(req.URL.Path, "/"), "Hey!"}
 	log.Println("serving", req.URL)
-	fmt.Fprintln(w, "Hello, " + id)
+	js, err := json.Marshal(hey)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
