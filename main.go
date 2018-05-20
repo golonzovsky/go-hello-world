@@ -9,8 +9,8 @@ import (
 )
 
 type Hey struct {
-	Name    string
-	Message string
+	Name    string `json:"name"`
+	Message string `json:"message"`
 }
 
 func main() {
@@ -20,9 +20,10 @@ func main() {
 }
 
 func handleHello(w http.ResponseWriter, req *http.Request) {
-	hey := Hey{strings.TrimPrefix(req.URL.Path, "/"), "Hey!"}
-	log.Println("serving", req.URL)
-	js, err := json.Marshal(hey)
+	username := strings.TrimPrefix(req.URL.Path, "/")
+	message := Hey{username, "Hey!"}
+	log.Println("serving", req.URL, username)
+	js, err := json.Marshal(message)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
