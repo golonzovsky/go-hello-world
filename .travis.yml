@@ -9,6 +9,6 @@ script:
 - docker build -t $DOCKER_USER/go-hello:latest -t $DOCKER_USER/go-hello:$TRAVIS_COMMIT .
 deploy:
   provider: script
-  script: bash dockerPush.sh
+  script: echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin && docker push $DOCKER_USER/go-hello
   on:
     branch: master
